@@ -6,9 +6,12 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 /**
  * Created when program is launched;
@@ -21,7 +24,9 @@ public abstract class BaseGame extends Game {
      */
     private static BaseGame game;
 
+    public static BitmapFont customFont;
     public static Label.LabelStyle labelStyle; // BitmapFont + Color
+    public static TextButton.TextButtonStyle textButtonStyle; // NPD + BitmapFont + Color
 
     /*------------------------------------------------------------------*\
    	|*							Constructors							*|
@@ -44,6 +49,10 @@ public abstract class BaseGame extends Game {
         Gdx.input.setInputProcessor(im);
 
         fontSetup();
+        textButtonSetup();
+
+        labelStyle = new Label.LabelStyle();
+        labelStyle.font = customFont;
     }
 
     /*------------------------------------------------------------------*\
@@ -74,10 +83,15 @@ public abstract class BaseGame extends Game {
         fontParameters.borderColor = Color.BLACK;
         fontParameters.minFilter = Texture.TextureFilter.Linear;
         fontParameters.magFilter = Texture.TextureFilter.Linear;
+        customFont = fontGenerator.generateFont(fontParameters);
+    }
 
-        BitmapFont customFont = fontGenerator.generateFont(fontParameters);
-
-        labelStyle = new Label.LabelStyle();
-        labelStyle.font = customFont;
+    private void textButtonSetup() {
+        textButtonStyle = new TextButton.TextButtonStyle();
+        Texture   buttonTex   = new Texture( Gdx.files.internal("button.png") );
+        NinePatch buttonPatch = new NinePatch(buttonTex, 24,24,24,24);
+        textButtonStyle.up    = new NinePatchDrawable( buttonPatch );
+        textButtonStyle.font      = customFont;
+        textButtonStyle.fontColor = Color.GRAY;
     }
 }
