@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  * collision polygons, movement, world boundaries, and camera scrolling.
  * Most game objects should extend this class; lists of extensions can be retrieved by stage and class name.
  */
-public class BaseActor extends Actor {
+public class BaseActor extends Group {
 
     // Animation
     private Animation<TextureRegion> animation;
@@ -320,18 +321,17 @@ public class BaseActor extends Actor {
     }
 
     /**
-     *  Draws current frame of animation; automatically called by draw method in Stage class. <br>
-     *  If color has been set, image will be tinted by that color. <br>
-     *  If no animation has been set or object is invisible, nothing will be drawn.
-     *  @param batch (supplied by Stage draw method)
-     *  @param parentAlpha (supplied by Stage draw method)
-     *  @see #setColor
-     *  @see #setVisible
+     * Draws current frame of animation; automatically called by draw method in Stage class. <br>
+     * If color has been set, image will be tinted by that color. <br>
+     * If no animation has been set or object is invisible, nothing will be drawn.
      *
+     * @param batch       (supplied by Stage draw method)
+     * @param parentAlpha (supplied by Stage draw method)
+     * @see #setColor
+     * @see #setVisible
      */
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
 
         Color c = getColor();
         batch.setColor(c.r, c.g, c.b, c.a);
@@ -343,6 +343,7 @@ public class BaseActor extends Actor {
                     getScaleY(), getRotation()
             );
         }
+        super.draw(batch, parentAlpha);
     }
 
     /*------------------------------*\

@@ -1,27 +1,31 @@
 package com.spacerocks;
 
-public class LevelScreen extends BaseScreen {
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
-    private Spaceship spaceship;
+public class Thrusters extends BaseActor {
 
 	/*------------------------------------------------------------------*\
 	|*							Constructors							*|
 	\*------------------------------------------------------------------*/
 
-	public void initialize() {
-	    BaseActor space = new BaseActor(0, 0, mainStage);
-	    space.loadTexture("space.png");
-	    space.setSize(1920, 1080);
-	    BaseActor.setWorldBounds(space);
-
-	    spaceship = new Spaceship(400, 300, mainStage);
+    public Thrusters(float x, float y, Stage s) {
+        super(x, y, s);
+        loadTexture("fire.png");
     }
+
+    public Thrusters(float x, float y, Stage s, boolean gaz) {
+        super(x, y, s);
+        loadTexture("gaz.png");
+    }
+
+	/*------------------------------*\
+	|*				Getters			*|
+	\*------------------------------*/
 
 	/*------------------------------------------------------------------*\
 	|*							Public Methods 							*|
 	\*------------------------------------------------------------------*/
-
-	public void update(float dt) { }
 
 	/*------------------------------------------------------------------*\
 	|*							Private Methods 						*|
