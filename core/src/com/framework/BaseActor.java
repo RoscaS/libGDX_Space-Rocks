@@ -1,4 +1,4 @@
-package com.spacerocks;
+package com.framework;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -614,7 +614,6 @@ public class BaseActor extends Group {
         if (getY() < 0) setY(0);
         if (getY() + getHeight() > worldBounds.height) setY(worldBounds.height - getHeight());
     }
-
 
     /*------------------------------*\
    	|*				Camera  		*|

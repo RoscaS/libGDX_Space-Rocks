@@ -1,6 +1,7 @@
 package com.spacerocks;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.framework.BaseActor;
 
 public class Explosion extends BaseActor {
 

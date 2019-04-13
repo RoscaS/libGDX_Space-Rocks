@@ -1,4 +1,4 @@
-package com.spacerocks;
+package com.framework;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
@@ -75,7 +75,7 @@ public abstract class BaseGame extends Game {
      * Parameters for generating a custom bitmap font.
      */
     private void fontSetup() {
-        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("Roboto.ttf"));
+        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("framework/Roboto.ttf"));
         FreeTypeFontParameter fontParameters = new FreeTypeFontParameter();
         fontParameters.size = 48;
         fontParameters.color = Color.WHITE;
@@ -88,7 +88,7 @@ public abstract class BaseGame extends Game {
 
     private void textButtonSetup() {
         textButtonStyle = new TextButton.TextButtonStyle();
-        Texture   buttonTex   = new Texture( Gdx.files.internal("button.png") );
+        Texture   buttonTex   = new Texture( Gdx.files.internal("framework/button.png") );
         NinePatch buttonPatch = new NinePatch(buttonTex, 24,24,24,24);
         textButtonStyle.up    = new NinePatchDrawable( buttonPatch );
         textButtonStyle.font      = customFont;
