@@ -8,7 +8,9 @@ import com.framework.BaseActor;
 
 public class Spaceship extends BaseActor {
 
-    private Thrusters mainThruster;
+    // private Thrusters mainThruster;
+    private ThrusterEffect thrusterEffect;
+
     private Thrusters leftThruster;
     private Thrusters rightThruster;
 
@@ -34,9 +36,11 @@ public class Spaceship extends BaseActor {
         setDeceleration(0);
 
         // main thruster
-        mainThruster = new Thrusters(0, 0, s);
-        addActor(mainThruster);
-        mainThruster.setPosition(-mainThruster.getWidth(), getHeight() / 2 - mainThruster.getHeight() / 2);
+        thrusterEffect = new ThrusterEffect();
+        thrusterEffect.setPosition(0, 32);
+        thrusterEffect.setRotation(90);
+        thrusterEffect.setScale(.25f);
+        addActor(thrusterEffect);
 
         // left thruster
         leftThruster = new Thrusters(0, 0, s, true);
@@ -140,9 +144,9 @@ public class Spaceship extends BaseActor {
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             accelerateAtAngle(getRotation());
-            mainThruster.setVisible(true);
+            thrusterEffect.start();
         } else {
-            mainThruster.setVisible(false);
+            thrusterEffect.stop();
         }
     }
 }

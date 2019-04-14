@@ -42,22 +42,19 @@ public class LevelScreen extends BaseScreen {
         for (BaseActor rockActor : BaseActor.getList(mainStage, Rock.class.getCanonicalName())) {
             if (rockActor.overlaps(spaceship)) {
                 if (spaceship.getShieldPower() <= 0) {
-                    Explosion e = new Explosion(0, 0, mainStage);
-                    e.centerAtActor(spaceship);
+                    explosion(spaceship);
                     spaceship.remove();
                     spaceship.setPosition(-10000, -10000);
                     setEndGame("message-lose.png");
                 } else {
                     spaceship.setShieldPower(spaceship.getShieldPower() - 34);
-                    Explosion e = new Explosion(0, 0, mainStage);
-                    e.centerAtActor(rockActor);
+                    explosion(rockActor);
                     rockActor.remove();
                 }
             }
             for (BaseActor laserActor : BaseActor.getList(mainStage, Laser.class.getCanonicalName())) {
                 if (laserActor.overlaps(rockActor)) {
-                    Explosion e = new Explosion(0, 0, mainStage);
-                    e.centerAtActor(rockActor);
+                    explosion(rockActor);
                     laserActor.remove();
                     rockActor.remove();
                 }
@@ -80,8 +77,15 @@ public class LevelScreen extends BaseScreen {
     }
 
 	/*------------------------------------------------------------------*\
-	|*							Private Attributs 						*|
+	|*							Private methodes 						*|
 	\*------------------------------------------------------------------*/
+
+	private void explosion(BaseActor target) {
+        ExplosionEffect boom = new ExplosionEffect();
+        boom.centerAtActor(target);
+        boom.start();
+        mainStage.addActor(boom);
+    }
 
     private void setEndGame(String textureName) {
         BaseActor messageLose = new BaseActor(0, 0, uiStage);
