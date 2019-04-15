@@ -17,9 +17,4 @@ public class Warp extends BaseActor {
         addAction(Actions.after(Actions.fadeOut(0.5f)));
         addAction(Actions.after(Actions.removeActor()));
     }
-
-	/*------------------------------------------------------------------*\
-	|*							Private Methods 						*|
-	\*------------------------------------------------------------------*/
-
 }
