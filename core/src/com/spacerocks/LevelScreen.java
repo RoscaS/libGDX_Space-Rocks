@@ -22,7 +22,7 @@ public class LevelScreen extends BaseScreen {
 
         gameOver = false;
 
-        spaceship = new Spaceship(400, 300, mainStage);
+        spaceship = new Spaceship(1000, 1000, mainStage);
 
         new Rock(600, 500, mainStage);
         new Rock(600, 300, mainStage);
