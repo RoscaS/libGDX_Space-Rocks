@@ -23,16 +23,16 @@ public class LevelScreen extends BaseScreen {
 
         gameOver = false;
 
-        spaceship = new Spaceship(1000, 1000, mainStage);
+        // spaceship = new Spaceship(1000, 1000, mainStage);
 
-        new Rock(600, 500, mainStage);
-        new Rock(600, 300, mainStage);
-        new Rock(600, 100, mainStage);
-        new Rock(400, 100, mainStage);
-        new Rock(200, 100, mainStage);
-        new Rock(200, 300, mainStage);
-        new Rock(200, 500, mainStage);
-        new Rock(400, 500, mainStage);
+        // new Rock(600, 500, mainStage);
+        // new Rock(600, 300, mainStage);
+        // new Rock(600, 100, mainStage);
+        // new Rock(400, 100, mainStage);
+        // new Rock(200, 100, mainStage);
+        // new Rock(200, 300, mainStage);
+        // new Rock(200, 500, mainStage);
+        // new Rock(400, 500, mainStage);
     }
 
 	/*------------------------------------------------------------------*\

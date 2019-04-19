@@ -1,13 +1,11 @@
-package com.spacerocks;
+package com.spacerocks.actors;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.framework.BaseActor;
 import com.framework.Box2DActor;
 
-public class Rock extends Box2DActor {
+public class Sun extends Box2DActor {
 
     public final int acceleration = 40;
     public final int maxSpeed = 10;
@@ -16,7 +14,7 @@ public class Rock extends Box2DActor {
 	|*							Constructors							*|
 	\*------------------------------------------------------------------*/
 
-    public Rock(float x, float y, Stage s) {
+    public Sun(float x, float y, Stage s) {
         super(x, y, s);
         loadTexture("rock.png");
 
@@ -32,11 +30,9 @@ public class Rock extends Box2DActor {
 
         setMaxSpeed(50 + random);
         setAcceleration(50 + random);
-
     }
 
 	public void act(float dt) {
 	    super.act(dt);
-	    wrapAroundWorld();
     }
 }

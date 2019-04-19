@@ -5,6 +5,8 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
@@ -13,6 +15,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     protected Stage mainStage;
     protected Stage uiStage;
     protected Table uiTable;
+    public static final World world = new World(new Vector2(0, -9.8f), true);
 
 
     public BaseScreen() {
@@ -23,6 +26,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         uiTable.setFillParent(true);
         uiStage.addActor(uiTable);
 
+        // world = new World(new Vector2(0, -9.8f), true);
         initialize();
     }
 
@@ -102,34 +106,42 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 	|*							InputProcessor interface				*|
 	\*------------------------------------------------------------------*/
 
+    @Override
     public boolean keyDown(int keycode) {
         return false;
     }
 
+    @Override
     public boolean keyUp(int keycode) {
         return false;
     }
 
+    @Override
     public boolean keyTyped(char c) {
         return false;
     }
 
+    @Override
     public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }
 
+    @Override
     public boolean scrolled(int amount) {
         return false;
     }
 
+    @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         return false;
     }
 
+    @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         return false;
     }
 
+    @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         return false;
     }
