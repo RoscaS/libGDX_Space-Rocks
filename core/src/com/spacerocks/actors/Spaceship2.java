@@ -1,11 +1,14 @@
 package com.spacerocks.actors;
 
+import box2dLight.ConeLight;
+import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.framework.Box2DActor;
 import com.spacerocks.ThrusterEffect;
 import com.spacerocks.Thrusters;
+import com.spacerocks.screens.LevelScreen;
 
 public class Spaceship2 extends Box2DActor {
 
@@ -14,13 +17,11 @@ public class Spaceship2 extends Box2DActor {
     private Thrusters leftThruster;
     private Thrusters rightThruster;
 
-    private final float rotationSpeed = 240;
+    private ConeLight flashLight;
+
+    private final float rotationSpeed = 180;
     public final int acceleration = 2;
     public final int maxSpeed = 4;
-
-
-    // public RayHandler handler;
-    // public PointLight pointLight;
 
 
 	/*------------------------------------------------------------------*\
@@ -60,6 +61,9 @@ public class Spaceship2 extends Box2DActor {
         rightThruster.setPosition(0, -getHeight() / 4);
         rightThruster.rotateBy(90);
 
+        // flashLight
+
+
     }
 
 	/*------------------------------------------------------------------*\
@@ -69,21 +73,32 @@ public class Spaceship2 extends Box2DActor {
     public void act(float dt) {
         super.act(dt);
 
-        // System.out.println(getSpeed());
-
         spaceShipControl(dt);
-
-        // shield.setOpacity(shieldPower / 100f);
-        // if (shieldPower <= 0) shield.setVisible(false);
-
-
-
         wrapAroundWorld();
+    }
+
+    public void shoot() {
+        if (getStage() == null) return;
+        Laser2 laser = new Laser2(0, 0, this.getStage());
+
+        laser.initializePhysics(LevelScreen.WORLD);
+        laser.getBody().setGravityScale(0);
+        putAhead(laser, 100);
+
+        laser.setRotationAngle(getRotationAngle());
+        laser.setFixedRotation();
+        laser.setRotation(getRotation());
+        laser.light.attachToBody(laser.getBody());
+        laser.moveForward();
     }
 
 	/*------------------------------*\
 	|*				Getters			*|
 	\*------------------------------*/
+
+    public ConeLight getFlashLight() {
+        return flashLight;
+    }
 
 	/*------------------------------*\
 	|*				Setters			*|
@@ -94,6 +109,11 @@ public class Spaceship2 extends Box2DActor {
 	\*------------------------------------------------------------------*/
 
     private void spaceShipControl(float dt) {
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
+
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             // rotateBy(rotationSpeed * dt);
             getBody().setAngularVelocity(rotationSpeed * dt);

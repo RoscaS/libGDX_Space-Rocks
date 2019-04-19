@@ -153,6 +153,60 @@ public class Box2DActor extends Group {
         setWorldBounds(ba.getWidth(), ba.getHeight());
     }
 
+
+    public static Object extractAfromContact(Contact contact) {
+        return contact.getFixtureA().getBody().getUserData().getClass();
+    }
+
+    public static Object extractBfromContact(Contact contact) {
+        return contact.getFixtureB().getBody().getUserData().getClass();
+    }
+
+    public static boolean isContactBetween(Contact contact, Class a, Class b) {
+        Object oA = new Object();
+        Object oB = new Object();
+        try {
+            oA = extractAfromContact(contact);
+            oB = extractBfromContact(contact);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (oA.equals(a) && oB.equals(b));
+    }
+
+
+    // searches Contact for given type of object; returns null if not found
+    // assumes Body user data stores reference to associated object
+    public static Object getContactObject(Contact contact, Class theClass) {
+        Object objA = contact.getFixtureA().getBody().getUserData();
+        Object objB = contact.getFixtureB().getBody().getUserData();
+
+        if (objA.getClass().equals(theClass))
+            return objA;
+        else if (objB.getClass().equals(theClass))
+            return objB;
+        else
+            return null;
+    }
+
+    // searches Contact for given type of object and given Fixture name;
+    //    returns null if not found
+    // assumes Body user data stores reference to associated object
+    //    and Fixture user data stores String containing name
+    public static Object getContactObject(Contact contact, Class theClass, String fixtureName) {
+        Object objA = contact.getFixtureA().getBody().getUserData();
+        String nameA = (String) contact.getFixtureA().getUserData();
+        Object objB = contact.getFixtureB().getBody().getUserData();
+        String nameB = (String) contact.getFixtureB().getUserData();
+
+        if (objA.getClass().equals(theClass) && nameA.equals(fixtureName))
+            return objA;
+        else if (objB.getClass().equals(theClass) && nameB.equals(fixtureName))
+            return objB;
+        else
+            return null;
+    }
+
     /*------------------------------------------------------------------*\
 	|*							Public Methods 							*|
 	\*------------------------------------------------------------------*/
@@ -442,6 +496,34 @@ public class Box2DActor extends Group {
      */
     public void centerAtPosition(float x, float y) {
         body.setTransform(x / PPM, y / PPM, body.getAngle());
+    }
+
+    /**
+     * Move given actor in front of this actor.
+     * @param other Box2DActor to set in front
+     * @param distance how far ahead of this actor
+     */
+    public void putAhead(Box2DActor other, float distance) {
+        float a = getRotationAngle();
+        float c = (float) Math.cos(Math.toRadians(a));
+        float s = (float) Math.sin(Math.toRadians(a));
+        float x = (getX() + getOriginX()) + c * distance;
+        float y = (getY() + getOriginY()) + s * distance;
+        other.centerAtPosition(x, y);
+    }
+    /**
+     * Move given actor in front of this actor.
+     * @deprecated still here for compatibility reasons
+     * @param other Box2DActor to set in front
+     * @param distance how far ahead of this actor
+     */
+    public void putAhead(BaseActor other, float distance) {
+        float a = getRotationAngle();
+        float c = (float) Math.cos(Math.toRadians(a));
+        float s = (float) Math.sin(Math.toRadians(a));
+        float x = (getX() + getOriginX()) + c * distance;
+        float y = (getY() + getOriginY()) + s * distance;
+        other.centerAtPosition(x, y);
     }
 
     /*------------------------------*\

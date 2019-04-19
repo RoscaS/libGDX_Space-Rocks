@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.framework.BaseActor;
-import com.framework.BaseGame;
 import com.framework.BaseScreen;
 import com.framework.Box2DActor;
 import com.spacerocks.ExplosionEffect;
@@ -23,22 +22,24 @@ import com.spacerocks.actors.Sun;
 
 public class LevelScreen extends BaseScreen {
 
-    private RayHandler handler;
+    private Sun sun;
     private boolean gameOver;
-
     private Spaceship2 spaceship;
 
-    private Sun sun;
     private ConeLight sunlight;
     private ConeLight light;
     private ConeLight thrusterLight;
 
     private boolean thrusterOn;
 
-    private World world;
+
+    // Static
     private static final Float sunX = 3840f;
     private static final Float sunY = 2160f;
     private static final Float sunRotationCoeff = 2f;
+
+    public static final World WORLD = new World(new Vector2(0, -9.8f), true);
+    public static final RayHandler HANDLER = new RayHandler(WORLD);
 
 	/*------------------------------------------------------------------*\
 	|*							Constructors							*|
@@ -52,32 +53,42 @@ public class LevelScreen extends BaseScreen {
 
         gameOver = false;
 
-        world = BaseScreen.world;
+        // world = BaseScreen.world;
 
         spaceship = new Spaceship2(1920 / 2, 1080 / 2, mainStage);
-        spaceship.initializePhysics(world);
+        spaceship.initializePhysics(WORLD);
         spaceship.getBody().setGravityScale(0);
 
         sun = new Sun(sunX, sunY, mainStage);
-        sun.initializePhysics(world);
+        sun.initializePhysics(WORLD);
         sun.getBody().setGravityScale(0);
 
         Rock r1 = new Rock(600, 500, mainStage);
-        r1.initializePhysics(world);
+        r1.initializePhysics(WORLD);
         r1.getBody().setGravityScale(0);
 
         Rock r2 = new Rock(600, 300, mainStage);
-        r2.initializePhysics(world);
+        r2.initializePhysics(WORLD);
         r2.getBody().setGravityScale(0);
 
-        handler = new RayHandler(world);
-        handler.setBlurNum(6);
+        HANDLER.setBlurNum(6);
         lightsInitialization();
     }
 
 	/*------------------------------------------------------------------*\
-	|*							Updating Methods 				    	*|
+	|*							Static Methods 				    	    *|
 	\*------------------------------------------------------------------*/
+
+    public static void explosion(Box2DActor target) {
+        ExplosionEffect boom = new ExplosionEffect();
+        boom.centerAtActor(target);
+        boom.start();
+        target.getStage().addActor(boom);
+    }
+
+    /*------------------------------------------------------------------*\
+   	|*							Update                                  *|
+   	\*------------------------------------------------------------------*/
 
     public void update(float dt) {
 
@@ -157,7 +168,7 @@ public class LevelScreen extends BaseScreen {
     public void render(float dt) {
         super.render(dt);
 
-        world.step(1 / 60f, 6, 2);
+        WORLD.step(1 / 60f, 6, 2);
 
         handlerRender();
     }
@@ -166,11 +177,12 @@ public class LevelScreen extends BaseScreen {
     public boolean keyDown(int keycode) {
 
         // if (keycode == Input.Keys.X) spaceship.warp();
-        // if (keycode == Input.Keys.CONTROL_LEFT) spaceship.shoot();
-        System.out.println("ici");
+
+        if (keycode == Input.Keys.CONTROL_LEFT) {
+            spaceship.shoot();
+        }
 
         if (keycode == Input.Keys.UP) {
-            // thrusterLight.setDistance(2);
             thrusterOn = true;
         }
 
@@ -195,15 +207,13 @@ public class LevelScreen extends BaseScreen {
 
         if (keycode == Input.Keys.UP) {
             thrusterOn = false;
-            // thrusterLight.setDistance(0);
-            // spaceship.getBody().setLinearDamping(5f);
         }
         return false;
     }
 
     @Override
     public void dispose() {
-        handler.dispose();
+        HANDLER.dispose();
     }
 
 	/*------------------------------------------------------------------*\
@@ -213,20 +223,19 @@ public class LevelScreen extends BaseScreen {
     private void lightsInitialization() {
         thrusterOn = false;
 
-        light = new ConeLight(handler, 1000, Color.WHITE, 0, 0, 0, 0, 60);
+        light = new ConeLight(HANDLER, 1000, Color.WHITE, 0, 0, 0, 0, 60);
         light.setSoft(true);
         light.setSoftnessLength(.9f);
 
-        sunlight = new ConeLight(handler, 10000, Color.ORANGE, 90, 0, 0, 360, 180);
+        sunlight = new ConeLight(HANDLER, 10000, Color.ORANGE, 90, 0, 0, 360, 180);
         sunlight.setSoft(true);
         sunlight.setSoftnessLength(60f);
 
-        thrusterLight = new ConeLight(handler, 265, Color.SCARLET, 0, 10, 10, 0, 25);
+        thrusterLight = new ConeLight(HANDLER, 265, Color.SCARLET, 0, 10, 10, 0, 25);
         thrusterLight.setSoft(true);
         thrusterLight.setSoftnessLength(1);
 
         light.attachToBody(spaceship.getBody());
-        // thrusterLight.attachToBody(spaceship.getBody());
         sunlight.attachToBody(sun.getBody());
 
 
@@ -236,16 +245,11 @@ public class LevelScreen extends BaseScreen {
         Camera camera = mainStage.getCamera();
         Matrix4 matrix = mainStage.getCamera().combined;
         matrix.scl(100);
-        handler.setCombinedMatrix(matrix, 0, 0, camera.viewportWidth, camera.viewportHeight);
-        handler.updateAndRender();
+        HANDLER.setCombinedMatrix(matrix, 0, 0, camera.viewportWidth, camera.viewportHeight);
+        HANDLER.updateAndRender();
     }
 
-    private void explosion(BaseActor target) {
-        ExplosionEffect boom = new ExplosionEffect();
-        boom.centerAtActor(target);
-        boom.start();
-        mainStage.addActor(boom);
-    }
+
 
     private void setEndGame(String textureName) {
         BaseActor messageLose = new BaseActor(0, 0, uiStage);

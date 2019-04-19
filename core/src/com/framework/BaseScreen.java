@@ -15,7 +15,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     protected Stage mainStage;
     protected Stage uiStage;
     protected Table uiTable;
-    public static final World world = new World(new Vector2(0, -9.8f), true);
 
 
     public BaseScreen() {

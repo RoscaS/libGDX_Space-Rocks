@@ -82,10 +82,10 @@ public class LevelScreen extends BaseScreen {
 	\*------------------------------------------------------------------*/
 
 	private void explosion(BaseActor target) {
-        ExplosionEffect boom = new ExplosionEffect();
-        boom.centerAtActor(target);
-        boom.start();
-        mainStage.addActor(boom);
+        // ExplosionEffect boom = new ExplosionEffect();
+        // boom.centerAtActor(target);
+        // boom.start();
+        // mainStage.addActor(boom);
     }
 
     private void setEndGame(String textureName) {
