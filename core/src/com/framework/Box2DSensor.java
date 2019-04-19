@@ -18,21 +18,14 @@ public class Box2DSensor extends Box2DActor {
 	|*							Constructors							*|
 	\*------------------------------------------------------------------*/
 
-    public Box2DSensor(float x, float y, Stage s) {
-        super(x, y, s);
+    public Box2DSensor(float x, float y, Stage s, World w) {
+        super(x, y, s, w);
     }
 
-	/*------------------------------------------------------------------*\
-	|*							Public Methods 							*|
-	\*------------------------------------------------------------------*/
-
-    // uses data to initialize object and add to world
-    public void initializePhysics(World world) {
-
-
-
+    @Override
+    protected void postConstruction() {
         // first, perform initialization tasks from Box2DActor
-        super.initializePhysics(world);
+        super.postConstruction();
 
         // create additional player-specific texture
         FixtureDef bottomSensor = new FixtureDef();

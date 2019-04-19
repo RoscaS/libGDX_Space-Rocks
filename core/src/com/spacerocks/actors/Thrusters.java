@@ -1,4 +1,4 @@
-package com.spacerocks;
+package com.spacerocks.actors;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.framework.BaseActor;

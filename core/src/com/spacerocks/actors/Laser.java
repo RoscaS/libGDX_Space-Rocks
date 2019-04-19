@@ -6,10 +6,9 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.framework.Box2DActor;
-import com.spacerocks.Rock;
 import com.spacerocks.screens.LevelScreen;
 
-public class Laser2 extends Box2DActor {
+public class Laser extends Box2DActor {
 
     public final int acceleration = 40;
     public final int maxSpeed = 40;
@@ -21,8 +20,8 @@ public class Laser2 extends Box2DActor {
 	|*							Constructors							*|
 	\*------------------------------------------------------------------*/
 
-    public Laser2(float x, float y, Stage s) {
-        super(x, y, s);
+    public Laser(float x, float y, Stage s, World w) {
+        super(x, y, s, w);
 
         contact = false;
 
@@ -39,15 +38,14 @@ public class Laser2 extends Box2DActor {
         setAcceleration(acceleration);
 
         light = new PointLight(LevelScreen.HANDLER, 265, Color.GREEN, .9f, 0, 0);
-        light.setXray(true);
         light.update();
 
         LevelScreen.WORLD.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
 
-                if (Box2DActor.isContactBetween(contact, Laser2.class, Rock.class)) {
-                    Laser2.this.contact = true;
+                if (Box2DActor.isContactBetween(contact, Laser.class, Rock.class)) {
+                    Laser.this.contact = true;
                     Body bodyB = contact.getFixtureB().getBody();
                     LevelScreen.explosion((Box2DActor)bodyB.getUserData());
                     light.attachToBody(bodyB);
@@ -55,20 +53,16 @@ public class Laser2 extends Box2DActor {
                     addAction(Actions.fadeOut(.01f));
                 }
             }
+            @Override public void endContact(Contact contact) { }
+            @Override public void preSolve(Contact contact, Manifold oldManifold) { }
+            @Override public void postSolve(Contact contact, ContactImpulse impulse) { }
 
-            @Override
-            public void endContact(Contact contact) {
-            }
-
-            @Override
-            public void preSolve(Contact contact, Manifold oldManifold) {
-            }
-
-            @Override
-            public void postSolve(Contact contact, ContactImpulse impulse) {
-            }
         });
+    }
 
+    @Override
+    protected void postConstruction() {
+        super.postConstruction();
     }
 
     /*------------------------------------------------------------------*\
@@ -77,6 +71,8 @@ public class Laser2 extends Box2DActor {
 
     @Override
     public void act(float dt) {
+        super.act(dt);
+
         if (contact) {
             try {
                 light.setColor(Color.RED);
@@ -85,7 +81,8 @@ public class Laser2 extends Box2DActor {
                 e.printStackTrace();
             }
         }
-        super.act(dt);
+
+        // wrapAroundWorld();
     }
 
     @Override
@@ -98,12 +95,5 @@ public class Laser2 extends Box2DActor {
             e.printStackTrace();
         }
         return false;
-    }
-
-    private void explosion(Rock rock) {
-        // ExplosionEffect boom = new ExplosionEffect();
-        // boom.centerAtActor(rock);
-        // boom.start();
-        // getStage().addActor(boom);
     }
 }

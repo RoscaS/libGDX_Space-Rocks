@@ -1,4 +1,4 @@
-package com.spacerocks;
+package com.spacerocks.actors;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.World;
@@ -16,8 +16,8 @@ public class Rock extends Box2DActor {
 	|*							Constructors							*|
 	\*------------------------------------------------------------------*/
 
-    public Rock(float x, float y, Stage s) {
-        super(x, y, s);
+    public Rock(float x, float y, Stage s, World w) {
+        super(x, y, s, w);
         loadTexture("rock.png");
 
         setDynamic();
@@ -35,6 +35,13 @@ public class Rock extends Box2DActor {
 
     }
 
+    @Override
+    protected void postConstruction() {
+        super.postConstruction();
+        getBody().setGravityScale(0);
+    }
+
+    @Override
 	public void act(float dt) {
 	    super.act(dt);
 	    wrapAroundWorld();

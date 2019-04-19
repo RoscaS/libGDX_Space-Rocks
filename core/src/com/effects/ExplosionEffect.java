@@ -1,4 +1,6 @@
-package com.spacerocks;
+package com.effects;
+
+import com.framework.ParticleActor;
 
 public class ExplosionEffect extends ParticleActor {
 

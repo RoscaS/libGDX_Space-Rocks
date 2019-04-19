@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.spacerocks.screens.LevelScreen;
 
 import java.util.ArrayList;
 
@@ -42,6 +43,12 @@ public class Box2DActor extends Group {
     // fixture - attached to body
     protected FixtureDef fixtureDef;
 
+    // Physical world
+    private World world;
+
+    // Used to check post construction
+    protected boolean initialized;
+
 
     protected Float maxSpeed;   // hundreds of pixels per second
     protected Float maxSpeedX;  // hundreds of pixels per second
@@ -49,6 +56,9 @@ public class Box2DActor extends Group {
 
     protected Float acceleration;
     protected Float deceleration;
+
+
+
 
 
     // Stores size of game world for all actors
@@ -61,8 +71,10 @@ public class Box2DActor extends Group {
 	|*							Constructors							*|
 	\*------------------------------------------------------------------*/
 
-    public Box2DActor(float x, float y, Stage s) {
+    public Box2DActor(float x, float y, Stage s, World w) {
         super();
+
+        world = w;
 
         // perform additional initialization tasks
         setPosition(x, y);
@@ -84,6 +96,32 @@ public class Box2DActor extends Group {
 
         acceleration = 2f;
         deceleration = 2f;
+    }
+
+    /**
+     * Once the object is build there are a couple more things
+     * to set. This method is triggered automaticaly by the
+     * first run of
+     * @see #act(float)
+     */
+    protected void postConstruction() {
+        initializePhysics();
+        initialized = true;
+    }
+
+    /**
+     * Uses data to initialize object and add to world.
+     */
+    public void initializePhysics() {
+        // Initialize a body; automatically added to world
+        body = world.createBody(bodyDef);
+
+        // Initialize a Fixture and attach it to the body
+        Fixture f = body.createFixture(fixtureDef);
+        f.setUserData("main");
+
+        // Store reference to this, so can access from collision
+        body.setUserData(this);
     }
 
     /*------------------------------------------------------------------*\
@@ -211,20 +249,7 @@ public class Box2DActor extends Group {
 	|*							Public Methods 							*|
 	\*------------------------------------------------------------------*/
 
-    /**
-     * Uses data to initialize object and add to world.
-     */
-    public void initializePhysics(World w) {
-        // Initialize a body; automatically added to world
-        body = w.createBody(bodyDef);
 
-        // Initialize a Fixture and attach it to the body
-        Fixture f = body.createFixture(fixtureDef);
-        f.setUserData("main");
-
-        // Store reference to this, so can access from collision
-        body.setUserData(this);
-    }
 
 	/*------------------------------*\
 	|*				Getters			*|
@@ -296,6 +321,10 @@ public class Box2DActor extends Group {
      */
     public boolean isMoving() {
         return getSpeed() > 0;
+    }
+
+    public World getWorld() {
+        return world;
     }
 
 	/*------------------------------*\
@@ -470,12 +499,35 @@ public class Box2DActor extends Group {
    	|*				Tools   		*|
    	\*------------------------------*/
 
+    /**
+     * Apply a force to the center of mass. This wakes up the body.
+     * @param force
+     */
     public void applyForce(Vector2 force) {
         body.applyForceToCenter(force, true);
     }
 
+    /**
+     * Apply an impulse at a point. This immediately modifies the velocity.
+     * It also modifies the angular velocity if the point of application
+     * is not at the center of mass. This wakes up the body.
+     * @param impulse
+     */
     public void applyImpluse(Vector2 impulse) {
         body.applyLinearImpulse(impulse, body.getPosition(), true);
+    }
+
+    /**
+     *
+     * @param strength strength of the impulse
+     * @param angle direction in degrees
+     * @see #applyImpluse(Float, Float)
+     */
+    public void applyImpluse(Float strength, Float angle) {
+        Vector2 v = new Vector2(1, 1);
+        v.setAngle(getRotationAngle() + angle);
+        v.setLength(strength);
+        body.applyLinearImpulse(v, body.getPosition(), true);
     }
 
     /**
@@ -544,6 +596,11 @@ public class Box2DActor extends Group {
      */
     @Override
     public void act(float dt) {
+
+        if (!initialized) {
+            postConstruction();
+        }
+
         super.act(dt);
 
         if (animationPaused) return;
@@ -583,7 +640,6 @@ public class Box2DActor extends Group {
      *
      * @param batch       (supplied by Stage draw method)
      * @param parentAlpha (supplied by Stage draw method)
-     * @see #setColor
      * @see #setVisible
      */
     @Override

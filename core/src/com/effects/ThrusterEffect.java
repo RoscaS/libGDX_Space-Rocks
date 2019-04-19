@@ -1,6 +1,7 @@
-package com.spacerocks;
+package com.effects;
 
 import com.badlogic.gdx.physics.box2d.*;
+import com.framework.ParticleActor;
 import com.spacerocks.screens.LevelScreen;
 
 public class ThrusterEffect extends ParticleActor {
